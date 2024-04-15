@@ -1,4 +1,4 @@
-package com.pospayment.pospayment.repositroy;
+package com.pospayment.pospayment.repository;
 
 import com.pospayment.pospayment.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

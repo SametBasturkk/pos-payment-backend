@@ -2,7 +2,6 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -38,8 +37,8 @@ public class User {
     @Column(name = "role")
     private String role = "user";
 
-    @Column(name = "companyID")
-    private String companyID;
+    @Column(name = "companyID", nullable = false)
+    private Integer companyID;
 
     @Column(name = "isActive")
     private String isActive = "0";
