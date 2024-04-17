@@ -31,4 +31,5 @@ public class CompanyController {
         jwtToken.validateToken(Authorization);
         return ResponseEntity.ok(companyService.getCompanyList());
     }
+
 }

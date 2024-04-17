@@ -2,6 +2,7 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Table(name = "companies")
 @Entity
@@ -10,7 +11,11 @@ public class Company {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Integer id;
+
+    @Column(name = "UUID")
+    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Column(name = "name", unique = true)
     private String name;
@@ -25,8 +30,8 @@ public class Company {
     private String email;
 
     @Column(name = "isActive")
-    private String isActive = "0";
+    private Boolean isActive = false;
 
     @Column(name = "isDeleted")
-    private String isDeleted = "0";
+    private Boolean isDeleted = false;
 }
