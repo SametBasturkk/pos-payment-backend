@@ -26,7 +26,7 @@ public class UserService {
 
     public Integer getCompanyID(String username) {
         User user = userRepo.findByUsername(username);
-        return user.getCompanyID();
+        return user.getCompanyID().getId();
     }
 
 
