@@ -3,6 +3,7 @@ package com.pospayment.pospayment.service;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.repository.CategoryRepo;
 import com.pospayment.pospayment.util.JsonConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,11 @@ public class CategoryService {
         return jsonConverter.convertToJson(categoryRepo.findByCompanyID(companyID));
     }
 
-    public void deleteCategory(String id) {
-        categoryRepo.deleteById(id);
+    @Transactional
+    public void deleteCategory(String uuid) {
+        categoryRepo.deleteByuuid(uuid);
     }
+
 
 
 }

@@ -31,10 +31,10 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryList(jwtToken.getUsername(Authorization)));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteCategory(@RequestHeader String Authorization, @RequestParam String id) throws TokenException {
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteCategory(@RequestHeader String Authorization, @RequestParam String uuid) throws TokenException {
         jwtToken.validateToken(Authorization);
-        categoryService.deleteCategory(id);
+        categoryService.deleteCategory(uuid);
         return ResponseEntity.ok("Category deleted successfully");
     }
 }

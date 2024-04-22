@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 
-import java.util.List;
-
 @Table(name = "categories")
 @Entity
 @Data
@@ -24,10 +22,6 @@ public class Category {
 
     @Column(name = "companyID")
     private Integer companyID;
-
-    @Column(name = "productList")
-    @OneToMany
-    private List<Product> products;
 
     @Column(name = "isActive")
     private Boolean isActive = false;

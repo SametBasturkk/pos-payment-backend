@@ -2,10 +2,10 @@ package com.pospayment.pospayment.service;
 
 import com.pospayment.pospayment.model.Menu;
 import com.pospayment.pospayment.repository.MenuRepo;
+import com.pospayment.pospayment.util.JsonConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MenuService {
@@ -13,12 +13,16 @@ public class MenuService {
     @Autowired
     private MenuRepo menuRepo;
 
+    @Autowired
+    private JsonConverter jsonConverter;
+
     public void saveMenu(Menu menu) {
         menuRepo.save(menu);
     }
 
-    public void deleteMenu(String id) {
-        menuRepo.deleteById(id);
+    @Transactional
+    public void deleteMenu(String uuid) {
+        menuRepo.deleteByUUID(uuid);
     }
 
     public void deactiveMenu(String id) {
@@ -32,8 +36,8 @@ public class MenuService {
         return menuRepo.findById(id).get();
     }
 
-    public List<Menu> getAllMenus() {
-        return menuRepo.findAll();
+    public String getAllMenus(Integer companyId) {
+        return jsonConverter.convertToJson(menuRepo.findByCompanyId(companyId));
     }
 
 

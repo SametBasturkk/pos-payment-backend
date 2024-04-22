@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "menus")
 @Entity
@@ -22,8 +22,8 @@ public class Menu {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "procutList")
-    private ArrayList<Product> procutList;
+    @Column(name = "categoryList")
+    private List<String> categoryList;
 
     @Column(name = "companyID")
     private Integer companyID;

@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "image-uuid")
     private String imageUUID;
 
-    @Column(name = "category")
+    @Column(name = "category-uuid")
     private String category;
 
     @Column(name = "companyID")

@@ -31,7 +31,9 @@ public class ProductController {
 
 
     @PostMapping("/create")
-    public void createProduct(@RequestBody Product product) {
+    public void createProduct(@RequestHeader String Authorization, @RequestBody Product product) {
+        String username = jwtToken.getUsername(Authorization);
+        product.setCompanyID(userService.getCompanyID(username));
         productService.saveProduct(product);
     }
 
