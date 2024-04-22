@@ -3,12 +3,11 @@ package com.pospayment.pospayment.controller;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.service.ProductService;
 import com.pospayment.pospayment.service.StorageService;
+import com.pospayment.pospayment.service.UserService;
 import com.pospayment.pospayment.util.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,6 +21,9 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private JwtToken jwtToken;
 
     @Autowired
@@ -29,13 +31,13 @@ public class ProductController {
 
 
     @PostMapping("/create")
-    public void createProduct(Product product) {
+    public void createProduct(@RequestBody Product product) {
         productService.saveProduct(product);
     }
 
     @PostMapping("/delete")
-    public void deleteProduct(@RequestParam String id) {
-        productService.deleteProduct(id);
+    public void deleteProduct(@RequestParam String uuid) {
+        productService.deleteProduct(uuid);
     }
 
     @PostMapping("/get")
@@ -43,9 +45,10 @@ public class ProductController {
         return productService.getProduct(id);
     }
 
-    @PostMapping("/get-all")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/get-all")
+    public List<Product> getAllProducts(@RequestHeader String Authorization) {
+        String username = jwtToken.getUsername(Authorization);
+        return productService.getAllProducts(userService.getCompanyID(username));
     }
 
     @PostMapping("/get-by-category")
@@ -56,6 +59,11 @@ public class ProductController {
     @PostMapping("/image-upload")
     public String uploadImage(@RequestParam("image") MultipartFile file) {
         return storageService.store(file);
+    }
+
+    @GetMapping("/image/{filename:.+}")
+    public Resource getImage(@PathVariable String filename) {
+        return storageService.loadFile(filename);
     }
 
 

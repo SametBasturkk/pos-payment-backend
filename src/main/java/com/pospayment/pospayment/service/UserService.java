@@ -26,7 +26,7 @@ public class UserService {
 
     public Integer getCompanyID(String username) {
         User user = userRepo.findByUsername(username);
-        return user.getCompanyID().getId();
+        return user.getCompanyID();
     }
 
 
@@ -45,6 +45,10 @@ public class UserService {
             user.setPassword(hasher.hashPassword(newPass));
             userRepo.save(user);
         }
+    }
+
+    public User getUserDetails(String username) {
+        return userRepo.findByUsername(username);
     }
 }
 

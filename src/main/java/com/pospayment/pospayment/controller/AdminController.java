@@ -28,7 +28,7 @@ public class AdminController {
     public ResponseEntity<String> login(@RequestBody User userRequest) {
         if (userService.loginUser(userRequest)) {
             String token = jwtToken.createToken(userRequest.getUsername());
-            return ResponseEntity.ok().header("Authorization", token).body("Login successful");
+            return ResponseEntity.ok().body(token);
         } else {
             return ResponseEntity.status(401).body("Login failed");
         }
@@ -39,5 +39,11 @@ public class AdminController {
         jwtToken.validateToken(Authorization);
         userService.resetPassword(Authorization, newPass, oldPass);
         return ResponseEntity.ok("Password reset successfully");
+    }
+
+    @GetMapping("/user-details")
+    public ResponseEntity<User> getUserDetails(@RequestHeader String Authorization) throws TokenException {
+        String username = jwtToken.getUsername(Authorization);
+        return ResponseEntity.ok(userService.getUserDetails(username));
     }
 }

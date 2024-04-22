@@ -18,7 +18,9 @@ public class CategoryService {
     @Autowired
     UserService userService;
 
-    public void saveCategory(Category category) {
+    public void saveCategory(String userName,Category category) {
+        Integer companyID = userService.getCompanyID(userName);
+        category.setCompanyID(companyID);
         categoryRepo.save(category);
     }
 

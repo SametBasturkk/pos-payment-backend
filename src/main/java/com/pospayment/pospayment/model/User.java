@@ -42,9 +42,8 @@ public class User {
     @Column(name = "role")
     private String role = "user";
 
-    @PrimaryKeyJoinColumn
-    @OneToOne
-    private Company companyID;
+    @Column(name = "companyID")
+    private Integer companyID;
 
     @Column(name = "isActive")
     private Boolean isActive = false;

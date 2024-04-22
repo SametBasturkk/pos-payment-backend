@@ -2,6 +2,7 @@ package com.pospayment.pospayment.service;
 
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.ProductRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,9 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public void deleteProduct(String id) {
-        productRepo.deleteById(id);
+    @Transactional
+    public void deleteProduct(String uuid) {
+        productRepo.deleteByUUID(uuid);
     }
 
     public void updateProduct(Product product) {
@@ -29,8 +31,8 @@ public class ProductService {
         return productRepo.findById(id).get();
     }
 
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
+    public List<Product> getAllProducts(Integer companyID) {
+        return productRepo.findByCompanyID(companyID);
     }
 
     public List<Product> getProductsByCategory(String category) {

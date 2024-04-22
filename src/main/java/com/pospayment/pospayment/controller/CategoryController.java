@@ -21,7 +21,7 @@ public class CategoryController {
     @PostMapping("/create")
     public ResponseEntity<String> createCategory(@RequestHeader String Authorization, @RequestBody Category category) throws TokenException {
         jwtToken.validateToken(Authorization);
-        categoryService.saveCategory(category);
+        categoryService.saveCategory(jwtToken.getUsername(Authorization),category);
         return ResponseEntity.ok("Category created successfully");
     }
 
