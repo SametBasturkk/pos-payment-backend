@@ -38,6 +38,11 @@ public class MenuController {
         menuService.deactiveMenu(id);
     }
 
+    @GetMapping("/{uuid}")
+    public ResponseEntity<String> getMenu(@PathVariable String uuid) {
+        return ResponseEntity.ok(menuService.getMenuItems(uuid));
+    }
+
     @GetMapping("/get-all")
     public ResponseEntity<String> getAllMenus(@RequestHeader String Authorization) {
         Integer companyId = userService.getCompanyID(jwtToken.getUsername(Authorization));

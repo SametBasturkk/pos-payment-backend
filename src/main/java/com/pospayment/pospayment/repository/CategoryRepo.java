@@ -14,4 +14,6 @@ public interface CategoryRepo extends JpaRepository<Category, String> {
     @Query(nativeQuery = true, value = "DELETE FROM categories WHERE uuid = ?1")
     public void deleteByuuid(String uuid);
 
+    @Query(nativeQuery = true, value = "SELECT name FROM categories WHERE uuid = ?1")
+    String getCategoryName(String uuid);
 }

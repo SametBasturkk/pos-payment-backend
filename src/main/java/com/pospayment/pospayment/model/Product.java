@@ -23,10 +23,10 @@ public class Product {
     @Column(name = "price")
     private Double price;
 
-    @Column(name = "image-uuid")
+    @Column(name = "image_uuid")
     private String imageUUID;
 
-    @Column(name = "category-uuid")
+    @Column(name = "category_uuid")
     private String category;
 
     @Column(name = "companyID")

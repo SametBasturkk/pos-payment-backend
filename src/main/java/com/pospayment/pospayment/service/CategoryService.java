@@ -35,6 +35,9 @@ public class CategoryService {
         categoryRepo.deleteByuuid(uuid);
     }
 
+    public String getCategoryName(String uuid) {
+        return categoryRepo.getCategoryName(uuid);
+    }
 
 
 }

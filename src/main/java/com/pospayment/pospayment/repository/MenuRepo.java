@@ -15,4 +15,11 @@ public interface MenuRepo extends JpaRepository<Menu, String> {
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM menus WHERE uuid = ?1")
     void deleteByUUID(String uuid);
+
+
+    @Query(nativeQuery = true, value = "SELECT category_list FROM menus WHERE uuid = ?1")
+    List<String> getMenuCategories(String uuid);
+
+    @Query(nativeQuery = true, value = "SELECT name FROM menus WHERE uuid = ?1")
+    String getMenuName(String uuid);
 }

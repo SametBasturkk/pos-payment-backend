@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductRepo extends JpaRepository<Product, String> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM products WHERE category-uuid = ?1")
+    @Query(nativeQuery = true, value = "SELECT * FROM products WHERE category_uuid = ?1")
     public List<Product> findByCategoryUuid(String category);
 
 
