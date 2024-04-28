@@ -9,6 +9,11 @@ import net.minidev.json.annotate.JsonIgnore;
 @Data
 public class Order {
 
+    public final static Integer STATUS_PENDING = 0;
+    public final static Integer STATUS_PROCESSING = 1;
+    public final static Integer STATUS_COMPLETED = 2;
+    public final static Integer STATUS_CANCELLED = 3;
+
 
     @Id
     @GeneratedValue
@@ -18,20 +23,20 @@ public class Order {
     @Column(name = "UUID")
     private String UUID = java.util.UUID.randomUUID().toString();
 
-    @Column(name = "orderID")
-    private String orderID;
+    @Column(name = "orderDetails")
+    private String orderDetails;
 
-    @Column(name = "productID")
-    private String productID;
-
-    @Column(name = "quantity")
-    private String quantity;
-
-    @Column(name = "price")
+    @Column(name = "totalPrice")
     private String price;
 
     @Column(name = "companyID")
     private Integer companyID;
+
+    @Column(name = "menuID")
+    private String menuID;
+
+    @Column(name = "status")
+    private Integer status = STATUS_PENDING;
 
     @Column(name = "isActive")
     private Boolean isActive = false;

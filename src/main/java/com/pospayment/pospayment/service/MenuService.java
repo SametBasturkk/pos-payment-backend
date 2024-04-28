@@ -56,10 +56,10 @@ public class MenuService {
         MenuDTO menuDTO = new MenuDTO();
         HashMap<String, List<Product>> menuItems = new HashMap<>();
         menuDTO.setMenuName(menuRepo.getMenuName(uuid));
+        menuDTO.setCompanyID(menuRepo.getCompanyId(uuid));
 
 
-
-        List<String> categories = menuRepo.getMenuCategories(uuid);
+        List<String> categories = List.of(menuRepo.getMenuCategories(uuid).split(","));
 
         for (String category : categories) {
             menuItems.put(categoryService.getCategoryName(category), productService.getProductsByCategory(category));

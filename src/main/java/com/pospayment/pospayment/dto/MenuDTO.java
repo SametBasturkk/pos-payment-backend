@@ -14,5 +14,6 @@ public class MenuDTO {
     private String MenuName;
     private String MenuDescription;
     private HashMap<String, List<Product>> menuItems;
+    private String companyID;
 
 }
