@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.service.ProductService;
 import com.pospayment.pospayment.service.StorageService;
@@ -33,7 +34,7 @@ public class ProductController {
     @PostMapping("/create")
     public void createProduct(@RequestHeader String Authorization, @RequestBody Product product) {
         String username = jwtToken.getUsername(Authorization);
-        product.setCompanyID(userService.getCompanyID(username));
+        product.setCompany(userService.getCompany(username));
         productService.saveProduct(product);
     }
 
@@ -50,11 +51,11 @@ public class ProductController {
     @GetMapping("/get-all")
     public List<Product> getAllProducts(@RequestHeader String Authorization) {
         String username = jwtToken.getUsername(Authorization);
-        return productService.getAllProducts(userService.getCompanyID(username));
+        return productService.getAllProducts(userService.getCompany(username));
     }
 
     @PostMapping("/get-by-category")
-    public List<Product> getProductsByCategory(@RequestParam String category) {
+    public List<Product> getProductsByCategory(@RequestParam Category category) {
         return productService.getProductsByCategory(category);
     }
 

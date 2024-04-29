@@ -2,7 +2,6 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Table(name = "orders")
 @Entity
@@ -16,12 +15,9 @@ public class Order {
 
 
     @Id
+    @Column(name = "id")
     @GeneratedValue
-    @JsonIgnore
     private Integer id;
-
-    @Column(name = "UUID")
-    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Column(name = "orderDetails")
     private String orderDetails;
@@ -29,11 +25,13 @@ public class Order {
     @Column(name = "totalPrice")
     private String price;
 
-    @Column(name = "companyID")
-    private Integer companyID;
+    @ManyToOne
+    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    private Company company;
 
-    @Column(name = "menuID")
-    private String menuID;
+    @ManyToOne
+    @JoinColumn(name = "menuID", referencedColumnName = "id")
+    private Menu menu;
 
     @Column(name = "status")
     private Integer status = STATUS_PENDING;

@@ -2,7 +2,6 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Data
 @Entity
@@ -12,11 +11,7 @@ public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue
-    @JsonIgnore
     private Integer id;
-
-    @Column(name = "UUID")
-    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Column(name = "name")
     private String name;
@@ -42,8 +37,9 @@ public class User {
     @Column(name = "role")
     private String role = "user";
 
-    @Column(name = "companyID")
-    private Integer companyID;
+    @ManyToOne
+    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    private Company company;
 
     @Column(name = "isActive")
     private Boolean isActive = false;

@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Menu;
 import com.pospayment.pospayment.service.MenuService;
 import com.pospayment.pospayment.service.UserService;
@@ -23,14 +24,13 @@ public class MenuController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createMenu(@RequestHeader String Authorization, @RequestBody Menu menu) {
-        menu.setCompanyID(userService.getCompanyID(jwtToken.getUsername(Authorization)));
-        menuService.saveMenu(menu);
+        menuService.saveMenu(userService.getCompany(jwtToken.getUsername(Authorization)), menu);
         return ResponseEntity.ok("Menu created successfully");
     }
 
     @PostMapping("/delete")
-    public void deleteMenu(String uuid) {
-        menuService.deleteMenu(uuid);
+    public void deleteMenu(@RequestParam String id) {
+        menuService.deleteMenu(id);
     }
 
     @PostMapping("/deactive")
@@ -45,8 +45,8 @@ public class MenuController {
 
     @GetMapping("/get-all")
     public ResponseEntity<String> getAllMenus(@RequestHeader String Authorization) {
-        Integer companyId = userService.getCompanyID(jwtToken.getUsername(Authorization));
-        return ResponseEntity.ok(menuService.getAllMenus(companyId));
+        Company company = userService.getCompany(jwtToken.getUsername(Authorization));
+        return ResponseEntity.ok(menuService.getAllMenus(company));
     }
 
 

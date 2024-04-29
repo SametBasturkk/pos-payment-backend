@@ -1,5 +1,7 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.model.Category;
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.ProductRepo;
 import jakarta.transaction.Transactional;
@@ -18,8 +20,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(String uuid) {
-        productRepo.deleteByUUID(uuid);
+    public void deleteProduct(String id) {
+        productRepo.deleteById(id);
     }
 
     public void updateProduct(Product product) {
@@ -31,12 +33,12 @@ public class ProductService {
         return productRepo.findById(id).get();
     }
 
-    public List<Product> getAllProducts(Integer companyID) {
-        return productRepo.findByCompanyID(companyID);
+    public List<Product> getAllProducts(Company company) {
+        return productRepo.findByCompany(company);
     }
 
-    public List<Product> getProductsByCategory(String category) {
-        return productRepo.findByCategoryUuid(category);
+    public List<Product> getProductsByCategory(Category category) {
+        return productRepo.findByCategory(category);
     }
 
 }

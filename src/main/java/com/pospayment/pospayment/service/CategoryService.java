@@ -1,6 +1,7 @@
 package com.pospayment.pospayment.service;
 
 import com.pospayment.pospayment.model.Category;
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.repository.CategoryRepo;
 import com.pospayment.pospayment.util.JsonConverter;
 import jakarta.transaction.Transactional;
@@ -20,24 +21,21 @@ public class CategoryService {
     UserService userService;
 
     public void saveCategory(String userName,Category category) {
-        Integer companyID = userService.getCompanyID(userName);
-        category.setCompanyID(companyID);
+        Company company = userService.getCompany(userName);
+        category.setCompany(company);
         categoryRepo.save(category);
     }
 
     public String getCategoryList(String userName) {
-        Integer companyID = userService.getCompanyID(userName);
-        return jsonConverter.convertToJson(categoryRepo.findByCompanyID(companyID));
+        Company company = userService.getCompany(userName);
+        return jsonConverter.convertToJson(categoryRepo.findByCompany(company));
     }
 
     @Transactional
-    public void deleteCategory(String uuid) {
-        categoryRepo.deleteByuuid(uuid);
+    public void deleteCategory(String id) {
+        categoryRepo.deleteById(id);
     }
 
-    public String getCategoryName(String uuid) {
-        return categoryRepo.getCategoryName(uuid);
-    }
 
 
 }

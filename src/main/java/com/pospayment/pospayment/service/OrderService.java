@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import com.pospayment.pospayment.repository.OrderRepo;
 import com.pospayment.pospayment.util.JsonConverter;
@@ -15,7 +16,8 @@ public class OrderService {
     @Autowired
     private JsonConverter jsonConverter;
 
-    public void saveOrder(Order order) {
+    public void saveOrder(Company company,Order order) {
+        order.setCompany(company);
         orderRepo.save(order);
     }
 
@@ -44,7 +46,7 @@ public class OrderService {
         orderRepo.save(order);
     }
 
-    public String getAllOrders(Integer companyId) {
-        return jsonConverter.convertToJson(orderRepo.findByCompanyID(companyId));
+    public String getAllOrders(Company company) {
+        return jsonConverter.convertToJson(orderRepo.findByCompany(company));
     }
 }

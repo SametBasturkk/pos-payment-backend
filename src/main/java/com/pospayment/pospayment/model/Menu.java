@@ -2,7 +2,6 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.List;
 
@@ -12,21 +11,24 @@ import java.util.List;
 public class Menu {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue
-    @JsonIgnore
     private Integer id;
-
-    @Column(name = "UUID")
-    private String UUID = java.util.UUID.randomUUID().toString();
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "categoryList")
-    private List<String> categoryList;
+    @ManyToMany
+    @JoinTable(
+            name = "menu_category",
+            joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    )
+    private List<Category> categories;
 
-    @Column(name = "companyID")
-    private Integer companyID;
+    @ManyToOne
+    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    private Company company;
 
     @Column(name = "isActive")
     private Boolean isActive = false;

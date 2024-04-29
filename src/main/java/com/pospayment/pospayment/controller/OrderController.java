@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import com.pospayment.pospayment.service.MenuService;
 import com.pospayment.pospayment.service.OrderService;
@@ -26,8 +27,8 @@ public class OrderController {
     private MenuService menuService;
 
     @PostMapping("/create")
-    public ResponseEntity createOrder(@RequestBody Order order) {
-        orderService.saveOrder(order);
+    public ResponseEntity createOrder(@RequestHeader String Authorization, @RequestBody Order order) {
+        orderService.saveOrder(userService.getCompany(jwtToken.getUsername(Authorization)),order);
         return ResponseEntity.ok("Order created successfully");
     }
 
@@ -40,8 +41,8 @@ public class OrderController {
     @GetMapping("/get-all")
     public String getAllOrders(@RequestHeader String Authorization) {
         jwtToken.validateToken(Authorization);
-        Integer companyId = userService.getCompanyID(jwtToken.getUsername(Authorization));
-        return orderService.getAllOrders(companyId);
+        Company company = userService.getCompany(jwtToken.getUsername(Authorization));
+        return orderService.getAllOrders(company);
     }
 
 }

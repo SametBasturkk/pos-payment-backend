@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.repository.UserRepo;
 import com.pospayment.pospayment.util.Hasher;
@@ -24,9 +25,9 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public Integer getCompanyID(String username) {
+    public Company getCompany(String username) {
         User user = userRepo.findByUsername(username);
-        return user.getCompanyID();
+        return user.getCompany();
     }
 
 

@@ -1,6 +1,8 @@
 package com.pospayment.pospayment.service;
 
 import com.pospayment.pospayment.dto.MenuDTO;
+import com.pospayment.pospayment.model.Category;
+import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Menu;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.MenuRepo;
@@ -27,13 +29,18 @@ public class MenuService {
     @Autowired
     private JsonConverter jsonConverter;
 
-    public void saveMenu(Menu menu) {
+    @Autowired
+    private UserService userService;
+
+
+    public void saveMenu(Company company,Menu menu) {
+        menu.setCompany(company);
         menuRepo.save(menu);
     }
 
     @Transactional
-    public void deleteMenu(String uuid) {
-        menuRepo.deleteByUUID(uuid);
+    public void deleteMenu(String id) {
+        menuRepo.deleteById(id);
     }
 
     public void deactiveMenu(String id) {
@@ -47,22 +54,22 @@ public class MenuService {
         return menuRepo.findById(id).get();
     }
 
-    public String getAllMenus(Integer companyId) {
-        return jsonConverter.convertToJson(menuRepo.findByCompanyId(companyId));
+    public String getAllMenus(Company company) {
+        return jsonConverter.convertToJson(menuRepo.findByCompany(company));
     }
 
 
-    public String getMenuItems(String uuid) {
+    public String getMenuItems(String id) {
         MenuDTO menuDTO = new MenuDTO();
         HashMap<String, List<Product>> menuItems = new HashMap<>();
-        menuDTO.setMenuName(menuRepo.getMenuName(uuid));
-        menuDTO.setCompanyID(menuRepo.getCompanyId(uuid));
+        menuDTO.setMenuName(menuRepo.findById(id).get().getName());
+        menuDTO.setCompany(menuRepo.findById(id).get().getCompany());
 
 
-        List<String> categories = List.of(menuRepo.getMenuCategories(uuid).split(","));
+        List<Category> categories = menuRepo.findById(id).get().getCategories();
 
-        for (String category : categories) {
-            menuItems.put(categoryService.getCategoryName(category), productService.getProductsByCategory(category));
+        for (Category category : categories) {
+            menuItems.put(category.getName(), productService.getProductsByCategory(category));
         }
 
         menuDTO.setMenuItems(menuItems);
