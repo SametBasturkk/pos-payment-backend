@@ -5,20 +5,22 @@ import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.repository.UserRepo;
 import com.pospayment.pospayment.util.Hasher;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepo userRepo;
 
-    @Autowired
     private Hasher hasher;
 
-    @Autowired
-    JwtToken jwtToken;
+    private JwtToken jwtToken;
+
+    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken) {
+        this.userRepo = userRepo;
+        this.hasher = hasher;
+        this.jwtToken = jwtToken;
+    }
 
     public void saveUser(User user) {
         user.setPassword(hasher.hashPassword(user.getPassword()));

@@ -2,7 +2,10 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "menus")
@@ -35,5 +38,11 @@ public class Menu {
 
     @Column(name = "isDeleted")
     private Boolean isDeleted = false;
+
+    @CreationTimestamp
+    Date createdAt;
+
+    @UpdateTimestamp
+    Date modifiedAt;
 
 }

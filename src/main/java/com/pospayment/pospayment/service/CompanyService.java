@@ -3,8 +3,7 @@ package com.pospayment.pospayment.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.repository.CompanyRepo;
-import com.pospayment.pospayment.util.JsonConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pospayment.pospayment.util.Converter;
 import org.springframework.stereotype.Service;
 
 
@@ -12,17 +11,20 @@ import org.springframework.stereotype.Service;
 public class CompanyService {
 
 
-    @Autowired
     private CompanyRepo companyRepo;
 
-    @Autowired
-    private JsonConverter jsonConverter;
+    private Converter converter;
+
+    public CompanyService(CompanyRepo companyRepo, Converter converter) {
+        this.companyRepo = companyRepo;
+        this.converter = converter;
+    }
 
     public void saveCompany(Company company) {
         companyRepo.save(company);
     }
 
     public String getCompanyList() throws JsonProcessingException {
-        return jsonConverter.convertToJson(companyRepo.findAll());
+        return converter.convertToJson(companyRepo.findAll());
     }
 }

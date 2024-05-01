@@ -1,16 +1,18 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.dto.ProductDTO;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.service.ProductService;
 import com.pospayment.pospayment.service.StorageService;
 import com.pospayment.pospayment.service.UserService;
+import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,17 +20,23 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
     private ProductService productService;
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private JwtToken jwtToken;
 
-    @Autowired
     private StorageService storageService;
+
+    private Converter converter;
+
+    public ProductController(ProductService productService, UserService userService, JwtToken jwtToken, StorageService storageService, Converter converter) {
+        this.productService = productService;
+        this.userService = userService;
+        this.jwtToken = jwtToken;
+        this.storageService = storageService;
+        this.converter = converter;
+    }
 
 
     @PostMapping("/create")
@@ -39,8 +47,8 @@ public class ProductController {
     }
 
     @PostMapping("/delete")
-    public void deleteProduct(@RequestParam String uuid) {
-        productService.deleteProduct(uuid);
+    public void deleteProduct(@RequestParam String id) {
+        productService.deleteProduct(id);
     }
 
     @PostMapping("/get")
@@ -49,9 +57,17 @@ public class ProductController {
     }
 
     @GetMapping("/get-all")
-    public List<Product> getAllProducts(@RequestHeader String Authorization) {
+    public List<ProductDTO> getAllProducts(@RequestHeader String Authorization) {
+
         String username = jwtToken.getUsername(Authorization);
-        return productService.getAllProducts(userService.getCompany(username));
+        List<Product> products = productService.getAllProducts(userService.getCompany(username));
+        List<ProductDTO> productDTO = new ArrayList<>();
+        for (Product p : products) {
+            productDTO.add(converter.convertToDTO(p, ProductDTO.class));
+        }
+
+        return productDTO;
+
     }
 
     @PostMapping("/get-by-category")

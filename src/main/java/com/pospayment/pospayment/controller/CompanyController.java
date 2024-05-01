@@ -5,7 +5,6 @@ import com.pospayment.pospayment.exception.TokenException;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.service.CompanyService;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/company")
 public class CompanyController {
 
-    @Autowired
     private CompanyService companyService;
 
-    @Autowired
     private JwtToken jwtToken;
+
+    public CompanyController(CompanyService companyService, JwtToken jwtToken) {
+        this.companyService = companyService;
+        this.jwtToken = jwtToken;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createCompany(@RequestHeader String Authorization, @RequestBody Company company) throws TokenException {

@@ -1,10 +1,11 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.dto.UserDTO;
 import com.pospayment.pospayment.exception.TokenException;
 import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.service.UserService;
+import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private JwtToken jwtToken;
+
+    private Converter converter;
+
+    public AdminController(UserService userService, JwtToken jwtToken, Converter converter) {
+        this.userService = userService;
+        this.jwtToken = jwtToken;
+        this.converter = converter;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User userRequest) {
@@ -42,8 +49,8 @@ public class AdminController {
     }
 
     @GetMapping("/user-details")
-    public ResponseEntity<User> getUserDetails(@RequestHeader String Authorization) throws TokenException {
+    public ResponseEntity<UserDTO> getUserDetails(@RequestHeader String Authorization) throws TokenException {
         String username = jwtToken.getUsername(Authorization);
-        return ResponseEntity.ok(userService.getUserDetails(username));
+        return ResponseEntity.ok(converter.convertToDTO(userService.getUserDetails(username), UserDTO.class));
     }
 }

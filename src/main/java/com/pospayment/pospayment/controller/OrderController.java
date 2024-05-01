@@ -2,11 +2,9 @@ package com.pospayment.pospayment.controller;
 
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
-import com.pospayment.pospayment.service.MenuService;
 import com.pospayment.pospayment.service.OrderService;
 import com.pospayment.pospayment.service.UserService;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,17 +12,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
     private OrderService orderService;
 
-    @Autowired
     private JwtToken jwtToken;
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
-    private MenuService menuService;
+
+    public OrderController(OrderService orderService, JwtToken jwtToken, UserService userService) {
+        this.orderService = orderService;
+        this.jwtToken = jwtToken;
+        this.userService = userService;
+    }
 
     @PostMapping("/create")
     public ResponseEntity createOrder(@RequestHeader String Authorization, @RequestBody Order order) {
@@ -33,8 +32,8 @@ public class OrderController {
     }
 
     @PostMapping("/changeStatus")
-    public ResponseEntity changeStatusOrder(@RequestParam String uuid, @RequestParam String status) {
-        orderService.changeStatus(uuid, status);
+    public ResponseEntity changeStatusOrder(@RequestParam String id, @RequestParam String status) {
+        orderService.changeStatus(id, status);
         return ResponseEntity.ok("Order status changed successfully");
     }
 

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoryRepo extends JpaRepository<Category, String> {
-    public List<?> findByCompany(Company company);
+    public List<Category> findByCompany(Company company);
 
 
 }

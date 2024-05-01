@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JsonConverter {
+public class Converter {
 
     public ModelMapper modelMapper = new ModelMapper();
 
@@ -19,5 +19,9 @@ public class JsonConverter {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public <T> T convertToDTO(Object object, Class<T> dto) {
+        return modelMapper.map(object, dto);
     }
 }

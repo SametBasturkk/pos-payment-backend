@@ -2,6 +2,10 @@ package com.pospayment.pospayment.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 @Data
 @Entity
@@ -46,4 +50,10 @@ public class User {
 
     @Column(name = "isDeleted")
     private Boolean isDeleted = false;
+
+    @CreationTimestamp
+    Date createdAt;
+
+    @UpdateTimestamp
+    Date modifiedAt;
 }

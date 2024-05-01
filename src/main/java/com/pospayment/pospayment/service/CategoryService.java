@@ -1,24 +1,29 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.exception.NotFoundException;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.repository.CategoryRepo;
-import com.pospayment.pospayment.util.JsonConverter;
+import com.pospayment.pospayment.util.Converter;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CategoryService {
 
-    @Autowired
     private CategoryRepo categoryRepo;
 
-    @Autowired
-    private JsonConverter jsonConverter;
+    private Converter converter;
 
-    @Autowired
-    UserService userService;
+    private UserService userService;
+
+    public CategoryService(CategoryRepo categoryRepo, Converter converter, UserService userService) {
+        this.categoryRepo = categoryRepo;
+        this.converter = converter;
+        this.userService = userService;
+    }
 
     public void saveCategory(String userName,Category category) {
         Company company = userService.getCompany(userName);
@@ -26,9 +31,16 @@ public class CategoryService {
         categoryRepo.save(category);
     }
 
-    public String getCategoryList(String userName) {
+    public List<Category> getCategoryList(String userName) {
         Company company = userService.getCompany(userName);
-        return jsonConverter.convertToJson(categoryRepo.findByCompany(company));
+        List<Category> category = categoryRepo.findByCompany(company);
+
+        if (category.isEmpty()) {
+            throw new NotFoundException("Category not found");
+        }
+
+        return category;
+
     }
 
     @Transactional

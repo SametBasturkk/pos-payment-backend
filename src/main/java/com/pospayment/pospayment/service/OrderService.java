@@ -3,18 +3,22 @@ package com.pospayment.pospayment.service;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import com.pospayment.pospayment.repository.OrderRepo;
-import com.pospayment.pospayment.util.JsonConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pospayment.pospayment.util.Converter;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderService {
 
-    @Autowired
     private OrderRepo orderRepo;
 
-    @Autowired
-    private JsonConverter jsonConverter;
+    private Converter converter;
+
+    public OrderService(OrderRepo orderRepo, Converter converter) {
+        this.orderRepo = orderRepo;
+        this.converter = converter;
+    }
 
     public void saveOrder(Company company,Order order) {
         order.setCompany(company);
@@ -22,8 +26,9 @@ public class OrderService {
     }
 
 
-    public void changeStatus(String uuid, String status) {
-        Order order = orderRepo.findByUuid(uuid);
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    public void changeStatus(String id, String status) {
+        Order order = orderRepo.findById(id).get();
 
         switch (status) {
             case "0":
@@ -47,6 +52,6 @@ public class OrderService {
     }
 
     public String getAllOrders(Company company) {
-        return jsonConverter.convertToJson(orderRepo.findByCompany(company));
+        return converter.convertToJson(orderRepo.findByCompany(company));
     }
 }

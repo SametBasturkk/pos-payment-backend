@@ -1,36 +1,35 @@
 package com.pospayment.pospayment.service;
 
 import com.pospayment.pospayment.dto.MenuDTO;
+import com.pospayment.pospayment.dto.ProductDTO;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Menu;
-import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.MenuRepo;
-import com.pospayment.pospayment.util.JsonConverter;
+import com.pospayment.pospayment.util.Converter;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class MenuService {
 
-    @Autowired
     private MenuRepo menuRepo;
 
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private ProductService productService;
 
-    @Autowired
-    private JsonConverter jsonConverter;
+    private Converter converter;
 
-    @Autowired
-    private UserService userService;
+
+    public MenuService(MenuRepo menuRepo, ProductService productService, Converter converter) {
+        this.menuRepo = menuRepo;
+        this.productService = productService;
+        this.converter = converter;
+    }
 
 
     public void saveMenu(Company company,Menu menu) {
@@ -54,26 +53,32 @@ public class MenuService {
         return menuRepo.findById(id).get();
     }
 
-    public String getAllMenus(Company company) {
-        return jsonConverter.convertToJson(menuRepo.findByCompany(company));
+    public List<MenuDTO> getAllMenus(Company company) {
+        List<Menu> menus = menuRepo.findByCompany(company);
+        List<MenuDTO> menuDTO= new ArrayList<>();
+
+        for (Menu menu : menus) {
+            menuDTO.add(converter.convertToDTO(menu, MenuDTO.class));
+        }
+        return menuDTO;
     }
 
 
     public String getMenuItems(String id) {
         MenuDTO menuDTO = new MenuDTO();
-        HashMap<String, List<Product>> menuItems = new HashMap<>();
+        HashMap<String, List<ProductDTO>> menuItems = new HashMap<>();
         menuDTO.setMenuName(menuRepo.findById(id).get().getName());
-        menuDTO.setCompany(menuRepo.findById(id).get().getCompany());
+        menuDTO.setCompanyId(menuRepo.findById(id).get().getCompany().getId());
 
 
         List<Category> categories = menuRepo.findById(id).get().getCategories();
 
         for (Category category : categories) {
-            menuItems.put(category.getName(), productService.getProductsByCategory(category));
+            menuItems.put(category.getName(), Collections.singletonList(converter.convertToDTO(productService.getProductsByCategory(category), ProductDTO.class)));
         }
 
         menuDTO.setMenuItems(menuItems);
 
-        return jsonConverter.convertToJson(menuDTO);
+        return converter.convertToJson(menuDTO);
     }
 }

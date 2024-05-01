@@ -1,22 +1,33 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.dto.CategoryDTO;
 import com.pospayment.pospayment.exception.TokenException;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.service.CategoryService;
+import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
-    @Autowired
     private CategoryService categoryService;
 
-    @Autowired
     private JwtToken jwtToken;
+
+    private Converter converter;
+
+
+    public CategoryController(CategoryService categoryService, JwtToken jwtToken, Converter converter) {
+        this.categoryService = categoryService;
+        this.jwtToken = jwtToken;
+        this.converter = converter;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createCategory(@RequestHeader String Authorization, @RequestBody Category category) throws TokenException {
@@ -26,9 +37,18 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<String> getCategories(@RequestHeader String Authorization) throws TokenException {
+    public ResponseEntity<List<CategoryDTO>> getCategories(@RequestHeader String Authorization) throws TokenException {
+
         jwtToken.validateToken(Authorization);
-        return ResponseEntity.ok(categoryService.getCategoryList(jwtToken.getUsername(Authorization)));
+        List<CategoryDTO> categoryDTO = new ArrayList<>();
+
+        List<Category> category = categoryService.getCategoryList(jwtToken.getUsername(Authorization));
+
+        for (Category c : category) {
+            categoryDTO.add(converter.convertToDTO(c, CategoryDTO.class));
+        }
+
+        return ResponseEntity.ok(categoryDTO);
     }
 
     @PostMapping("/delete")

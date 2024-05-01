@@ -1,26 +1,35 @@
 package com.pospayment.pospayment.controller;
 
+import com.pospayment.pospayment.dto.MenuDTO;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Menu;
 import com.pospayment.pospayment.service.MenuService;
 import com.pospayment.pospayment.service.UserService;
+import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
 
-    @Autowired
     private MenuService menuService;
 
-    @Autowired
     private JwtToken jwtToken;
 
-    @Autowired
     private UserService userService;
+
+    private Converter converter;
+
+    public MenuController(MenuService menuService, JwtToken jwtToken, UserService userService, Converter converter) {
+        this.menuService = menuService;
+        this.jwtToken = jwtToken;
+        this.userService = userService;
+        this.converter = converter;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createMenu(@RequestHeader String Authorization, @RequestBody Menu menu) {
@@ -38,15 +47,17 @@ public class MenuController {
         menuService.deactiveMenu(id);
     }
 
-    @GetMapping("/{uuid}")
-    public ResponseEntity<String> getMenu(@PathVariable String uuid) {
-        return ResponseEntity.ok(menuService.getMenuItems(uuid));
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getMenu(@PathVariable String id) {
+        return ResponseEntity.ok(menuService.getMenuItems(id));
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<String> getAllMenus(@RequestHeader String Authorization) {
+    public ResponseEntity<List<MenuDTO>> getAllMenus(@RequestHeader String Authorization) {
         Company company = userService.getCompany(jwtToken.getUsername(Authorization));
+
         return ResponseEntity.ok(menuService.getAllMenus(company));
+
     }
 
 
