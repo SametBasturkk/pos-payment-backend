@@ -1,6 +1,5 @@
 package com.pospayment.pospayment.controller;
 
-import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import com.pospayment.pospayment.service.OrderService;
 import com.pospayment.pospayment.service.UserService;
@@ -37,11 +36,17 @@ public class OrderController {
         return ResponseEntity.ok("Order status changed successfully");
     }
 
+    /*
     @GetMapping("/get-all")
-    public String getAllOrders(@RequestHeader String Authorization) {
+    public List<OrderDTO> getAllOrders(@RequestHeader String Authorization) {
         jwtToken.validateToken(Authorization);
         Company company = userService.getCompany(jwtToken.getUsername(Authorization));
         return orderService.getAllOrders(company);
     }
+     */
+
+
+
+
 
 }

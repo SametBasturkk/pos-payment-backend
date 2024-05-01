@@ -5,13 +5,13 @@ import com.pospayment.pospayment.dto.ProductDTO;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Menu;
+import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.MenuRepo;
 import com.pospayment.pospayment.util.Converter;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class MenuService {
     }
 
 
-    public void saveMenu(Company company,Menu menu) {
+    public void saveMenu(Company company, Menu menu) {
         menu.setCompany(company);
         menuRepo.save(menu);
     }
@@ -55,7 +55,7 @@ public class MenuService {
 
     public List<MenuDTO> getAllMenus(Company company) {
         List<Menu> menus = menuRepo.findByCompany(company);
-        List<MenuDTO> menuDTO= new ArrayList<>();
+        List<MenuDTO> menuDTO = new ArrayList<>();
 
         for (Menu menu : menus) {
             menuDTO.add(converter.convertToDTO(menu, MenuDTO.class));
@@ -74,7 +74,15 @@ public class MenuService {
         List<Category> categories = menuRepo.findById(id).get().getCategories();
 
         for (Category category : categories) {
-            menuItems.put(category.getName(), Collections.singletonList(converter.convertToDTO(productService.getProductsByCategory(category), ProductDTO.class)));
+            List<Product> products = productService.getProductsByCategory(category);
+            List<ProductDTO> productDTO = new ArrayList<>();
+
+            for (Product product : products) {
+                productDTO.add(converter.convertToDTO(product, ProductDTO.class));
+            }
+
+
+            menuItems.put(category.getName() , productDTO);
         }
 
         menuDTO.setMenuItems(menuItems);

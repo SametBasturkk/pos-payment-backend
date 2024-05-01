@@ -4,7 +4,9 @@ import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface OrderRepo extends JpaRepository<Order, String> {
 
-    Object findByCompany(Company company);
+   List<Order> findByCompany(Company company);
 }

@@ -1,5 +1,6 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.dto.OrderDTO;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Order;
 import com.pospayment.pospayment.repository.OrderRepo;
@@ -7,6 +8,9 @@ import com.pospayment.pospayment.util.Converter;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -20,7 +24,7 @@ public class OrderService {
         this.converter = converter;
     }
 
-    public void saveOrder(Company company,Order order) {
+    public void saveOrder(Company company, Order order) {
         order.setCompany(company);
         orderRepo.save(order);
     }
@@ -51,7 +55,15 @@ public class OrderService {
         orderRepo.save(order);
     }
 
-    public String getAllOrders(Company company) {
-        return converter.convertToJson(orderRepo.findByCompany(company));
+    public List<OrderDTO> getAllOrders(Company company) {
+        List<OrderDTO> orderDto = new ArrayList<>();
+        List<Order> orders = orderRepo.findByCompany(company);
+
+        for(Order order: orders){
+            orderDto.add(converter.convertToDTO(order,OrderDTO.class));
+        }
+
+        return orderDto;
+
     }
 }
