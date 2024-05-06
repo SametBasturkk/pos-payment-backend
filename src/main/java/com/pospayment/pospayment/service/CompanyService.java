@@ -1,10 +1,13 @@
 package com.pospayment.pospayment.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pospayment.pospayment.dto.CompanyListDTO;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.repository.CompanyRepo;
 import com.pospayment.pospayment.util.Converter;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -24,7 +27,14 @@ public class CompanyService {
         companyRepo.save(company);
     }
 
-    public String getCompanyList() throws JsonProcessingException {
-        return converter.convertToJson(companyRepo.findAll());
+    public String getCompanyList() {
+        List<CompanyListDTO> companyList = new ArrayList<>();
+        List<Company> companies = companyRepo.findAll();
+
+        for (Company company : companies) {
+            companyList.add(converter.convertToDTO(company, CompanyListDTO.class));
+        }
+
+        return converter.convertToJson(companyList);
     }
 }

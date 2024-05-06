@@ -1,6 +1,5 @@
 package com.pospayment.pospayment.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pospayment.pospayment.exception.TokenException;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.service.CompanyService;
@@ -29,8 +28,7 @@ public class CompanyController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<String> getCompanies(@RequestHeader String Authorization) throws TokenException, JsonProcessingException {
-        jwtToken.validateToken(Authorization);
+    public ResponseEntity<String> getCompanies(){
         return ResponseEntity.ok(companyService.getCompanyList());
     }
 

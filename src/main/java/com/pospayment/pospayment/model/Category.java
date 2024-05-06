@@ -17,11 +17,11 @@ public class Category {
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name" , nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    @JoinColumn(name = "companyID", referencedColumnName = "id", nullable = false)
     private Company company;
 
 

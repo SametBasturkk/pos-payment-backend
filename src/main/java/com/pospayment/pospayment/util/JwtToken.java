@@ -23,7 +23,11 @@ public class JwtToken {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(SECRET).build().parseSignedClaims(token).getPayload().getSubject();
+       try {
+           return Jwts.parser().setSigningKey(SECRET).build().parseSignedClaims(token).getPayload().getSubject();
+       } catch (Exception e) {
+           throw new TokenException("Invalid token", e);
+       }
     }
 
     public boolean validateToken(String token) throws TokenException {

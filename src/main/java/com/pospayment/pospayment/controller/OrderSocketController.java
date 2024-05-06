@@ -7,15 +7,18 @@ import com.pospayment.pospayment.service.OrderService;
 import com.pospayment.pospayment.service.UserService;
 import com.pospayment.pospayment.util.JwtToken;
 import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class OrderSocketController {
 
-    private String SOCKETHOST = "localhost";
+    @Value("${socket.host}")
+    private String SOCKETHOST;
 
-    private int SOCKETPORT = 9092;
+    @Value("${socket.port}")
+    private int SOCKETPORT;
 
     private SocketIOServer server;
 

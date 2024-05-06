@@ -17,21 +17,21 @@ public class Product {
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "image_uuid")
+    @Column(name = "image_uuid", nullable = false)
     private String imageUUID;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    @JoinColumn(name = "companyID", referencedColumnName = "id", nullable = false)
     private Company company;
 
     @Column(name = "isActive")

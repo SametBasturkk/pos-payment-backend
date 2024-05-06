@@ -26,15 +26,15 @@ public class Order {
     @Column(name = "orderDetails")
     private String orderDetails;
 
-    @Column(name = "totalPrice")
+    @Column(name = "totalPrice", nullable = false)
     private String price;
 
     @ManyToOne
-    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    @JoinColumn(name = "companyID", referencedColumnName = "id", nullable = false)
     private Company company;
 
     @ManyToOne
-    @JoinColumn(name = "menuID", referencedColumnName = "id")
+    @JoinColumn(name = "menuID", referencedColumnName = "id", nullable = false)
     private Menu menu;
 
     @Column(name = "status")

@@ -3,9 +3,11 @@ package com.pospayment.pospayment.service;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.repository.UserRepo;
-import com.pospayment.pospayment.util.Hasher;
-import com.pospayment.pospayment.util.JwtToken;
+import com.pospayment.pospayment.util.*;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -16,10 +18,16 @@ public class UserService {
 
     private JwtToken jwtToken;
 
-    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken) {
+    private Converter converter;
+
+    private Redis redis;
+
+    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken, Converter converter, Redis redis) {
         this.userRepo = userRepo;
         this.hasher = hasher;
         this.jwtToken = jwtToken;
+        this.converter = converter;
+        this.redis = redis;
     }
 
     public void saveUser(User user) {
@@ -52,6 +60,34 @@ public class UserService {
 
     public User getUserDetails(String username) {
         return userRepo.findByUsername(username);
+    }
+
+    public Boolean forgotPasswordMail(String email) {
+
+        User user = userRepo.findByEmail(email);
+
+        ResetPasswordSchema schema = new ResetPasswordSchema();
+        schema.setId(user.getId());
+        schema.setExp(new Timestamp(System.currentTimeMillis()));
+
+        if (user != null) {
+            redis.set(UUID.randomUUID().toString(), converter.objectToJson(schema));
+            //TODO = send mail
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void forgotPassword(String token, String password) {
+
+        String schema = redis.get(token);
+        ResetPasswordSchema resetPasswordSchema = converter.jsonToObject(schema, ResetPasswordSchema.class);
+        User user = userRepo.findById(String.valueOf(resetPasswordSchema.getId())).get();
+        user.setPassword(hasher.hashPassword(password));
+        userRepo.save(user);
+
+
     }
 }
 

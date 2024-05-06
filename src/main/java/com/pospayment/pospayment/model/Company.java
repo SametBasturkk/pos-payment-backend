@@ -17,7 +17,7 @@ public class Company {
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "address")
@@ -26,7 +26,7 @@ public class Company {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "isActive")

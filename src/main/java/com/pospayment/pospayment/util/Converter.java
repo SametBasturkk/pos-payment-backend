@@ -24,4 +24,23 @@ public class Converter {
     public <T> T convertToDTO(Object object, Class<T> dto) {
         return modelMapper.map(object, dto);
     }
+
+
+    public String objectToJson(Object schema) {
+        try {
+            return objectMapper.writeValueAsString(schema);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public <T> T jsonToObject(String schema, Class<T> tClass) {
+        try {
+            return objectMapper.readValue(schema, tClass);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

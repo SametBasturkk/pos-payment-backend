@@ -18,7 +18,7 @@ public class Menu {
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToMany
@@ -30,7 +30,7 @@ public class Menu {
     private List<Category> categories;
 
     @ManyToOne
-    @JoinColumn(name = "companyID", referencedColumnName = "id")
+    @JoinColumn(name = "companyID", referencedColumnName = "id", nullable = false)
     private Company company;
 
     @Column(name = "isActive")
