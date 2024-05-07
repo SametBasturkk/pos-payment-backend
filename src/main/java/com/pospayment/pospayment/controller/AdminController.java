@@ -69,4 +69,10 @@ public class AdminController {
         userService.forgotPassword(token, password);
         return ResponseEntity.ok("Password reset successfully");
     }
+
+    @GetMapping("/overview")
+    public ResponseEntity<String> getOverview(@RequestHeader String Authorization) {
+        jwtToken.validateToken(Authorization);
+        return ResponseEntity.ok(userService.getOverview(jwtToken.getUsername(Authorization)));
+    }
 }

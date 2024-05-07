@@ -1,6 +1,5 @@
 package com.pospayment.pospayment.service;
 
-import com.pospayment.pospayment.exception.NotFoundException;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.repository.CategoryRepo;
@@ -34,10 +33,6 @@ public class CategoryService {
     public List<Category> getCategoryList(String userName) {
         Company company = userService.getCompany(userName);
         List<Category> category = categoryRepo.findByCompany(company);
-
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category not found");
-        }
 
         return category;
 
