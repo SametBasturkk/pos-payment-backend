@@ -6,6 +6,7 @@ import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.service.CategoryService;
 import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category")
+@Slf4j
 public class CategoryController {
 
     private CategoryService categoryService;
@@ -33,6 +35,7 @@ public class CategoryController {
     public ResponseEntity<String> createCategory(@RequestHeader String Authorization, @RequestBody Category category) throws TokenException {
         jwtToken.validateToken(Authorization);
         categoryService.saveCategory(jwtToken.getUsername(Authorization),category);
+        log.info("Category created successfully : {}", category);
         return ResponseEntity.ok("Category created successfully");
     }
 
@@ -48,6 +51,8 @@ public class CategoryController {
             categoryDTO.add(converter.convertToDTO(c, CategoryDTO.class));
         }
 
+        log.info("Category list request");
+
         return ResponseEntity.ok(categoryDTO);
     }
 
@@ -55,6 +60,7 @@ public class CategoryController {
     public ResponseEntity<String> deleteCategory(@RequestHeader String Authorization, @RequestParam String id) throws TokenException {
         jwtToken.validateToken(Authorization);
         categoryService.deleteCategory(id);
+        log.info("Category deleted successfully : {}", id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 }

@@ -7,11 +7,13 @@ import com.pospayment.pospayment.service.OrderService;
 import com.pospayment.pospayment.service.UserService;
 import com.pospayment.pospayment.util.JwtToken;
 import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@Slf4j
 public class OrderSocketController {
 
     @Value("${socket.host}")
@@ -41,6 +43,8 @@ public class OrderSocketController {
         config.setPort(SOCKETPORT);
         server = new SocketIOServer(config);
         server.start();
+
+        log.info("Socket server started at : {}:{}", SOCKETHOST, SOCKETPORT);
 
 
         server.addEventListener("getOrders", String.class, (client, data, ackRequest) -> {
