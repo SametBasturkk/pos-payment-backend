@@ -7,7 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Table(name = "orders")
+@Table(name = "orders", indexes = {@Index(name = "orderIndex", columnList = "companyID, menuID, status")})
 @Entity
 @Data
 public class Order {

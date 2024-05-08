@@ -3,7 +3,10 @@ package com.pospayment.pospayment.service;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.repository.UserRepo;
-import com.pospayment.pospayment.util.*;
+import com.pospayment.pospayment.schema.ResetPasswordSchema;
+import com.pospayment.pospayment.util.Converter;
+import com.pospayment.pospayment.util.Hasher;
+import com.pospayment.pospayment.util.JwtToken;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -20,16 +23,16 @@ public class UserService {
 
     private Converter converter;
 
-    private Redis redis;
+    private RedisService redisService;
 
 
 
-    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken, Converter converter, Redis redis) {
+    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken, Converter converter, RedisService redisService) {
         this.userRepo = userRepo;
         this.hasher = hasher;
         this.jwtToken = jwtToken;
         this.converter = converter;
-        this.redis = redis;
+        this.redisService = redisService;
     }
 
     public void saveUser(User user) {
@@ -73,7 +76,7 @@ public class UserService {
         schema.setExp(new Timestamp(System.currentTimeMillis()));
 
         if (user != null) {
-            redis.set(UUID.randomUUID().toString(), converter.objectToJson(schema));
+            redisService.set(UUID.randomUUID().toString(), converter.objectToJson(schema));
             //TODO = send mail
             return true;
         } else {
@@ -83,7 +86,7 @@ public class UserService {
 
     public void forgotPassword(String token, String password) {
 
-        String schema = redis.get(token);
+        String schema = redisService.get(token);
         ResetPasswordSchema resetPasswordSchema = converter.jsonToObject(schema, ResetPasswordSchema.class);
         User user = userRepo.findById(String.valueOf(resetPasswordSchema.getId())).get();
         user.setPassword(hasher.hashPassword(password));

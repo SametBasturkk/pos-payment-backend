@@ -1,23 +1,16 @@
-package com.pospayment.pospayment.util;
+package com.pospayment.pospayment.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @Slf4j
-public class Redis {
-
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
+public class RedisService {
 
     private StringRedisTemplate redisTemplate;
 
-    public Redis(StringRedisTemplate redisTemplate) {
+    public RedisService(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -35,6 +28,4 @@ public class Redis {
         log.info("Deleting key : {}", key);
         redisTemplate.delete(key);
     }
-
-
 }

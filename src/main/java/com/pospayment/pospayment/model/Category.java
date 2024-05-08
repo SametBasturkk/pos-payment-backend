@@ -7,7 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Table(name = "categories")
+@Table(name = "categories", indexes =
+        {@Index(name = "categoryIndex", columnList = "name, companyID")}
+)
 @Entity
 @Data
 public class Category {
@@ -17,7 +19,7 @@ public class Category {
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "name" , nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne

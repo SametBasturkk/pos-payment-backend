@@ -19,7 +19,7 @@ enum UserRole {
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {@Index(name = "userIndex", columnList = "username, name, role, companyID")})
 public class User {
 
     @Id
