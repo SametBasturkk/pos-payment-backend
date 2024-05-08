@@ -4,11 +4,9 @@ import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.User;
 import com.pospayment.pospayment.repository.UserRepo;
 import com.pospayment.pospayment.util.*;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.UUID;
 
 @Service
@@ -24,22 +22,14 @@ public class UserService {
 
     private Redis redis;
 
-    private CategoryService categoryService;
-
-    private OrderService orderService;
-
-    private ProductService productService;
 
 
-    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken, Converter converter, Redis redis, @Lazy CategoryService categoryService, @Lazy OrderService orderService, @Lazy ProductService productService) {
+    public UserService(UserRepo userRepo, Hasher hasher, JwtToken jwtToken, Converter converter, Redis redis) {
         this.userRepo = userRepo;
         this.hasher = hasher;
         this.jwtToken = jwtToken;
         this.converter = converter;
         this.redis = redis;
-        this.categoryService = categoryService;
-        this.orderService = orderService;
-        this.productService = productService;
     }
 
     public void saveUser(User user) {
@@ -102,14 +92,5 @@ public class UserService {
 
     }
 
-    public String getOverview(String username) {
-        HashMap<String, Integer> overview = new HashMap<>();
-        User user = userRepo.findByUsername(username);
-        overview.put("totalProducts", productService.getAllProducts(user.getCompany()).size());
-        overview.put("totalCategories", categoryService.getCategoryList(username).size());
-        overview.put("totalOrders", orderService.getAllOrders(user.getCompany()).size());
-
-        return converter.convertToJson(overview);
-    }
 }
 

@@ -3,6 +3,7 @@ package com.pospayment.pospayment.controller;
 import com.pospayment.pospayment.dto.UserDTO;
 import com.pospayment.pospayment.exception.TokenException;
 import com.pospayment.pospayment.model.User;
+import com.pospayment.pospayment.service.PanelService;
 import com.pospayment.pospayment.service.UserService;
 import com.pospayment.pospayment.util.Converter;
 import com.pospayment.pospayment.util.JwtToken;
@@ -12,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/panel")
 @Slf4j
-public class AdminController {
+public class PanelController {
 
     private UserService userService;
 
@@ -22,10 +23,13 @@ public class AdminController {
 
     private Converter converter;
 
-    public AdminController(UserService userService, JwtToken jwtToken, Converter converter) {
+    private PanelService panelService;
+
+    public PanelController(UserService userService, JwtToken jwtToken, Converter converter, PanelService panelService) {
         this.userService = userService;
         this.jwtToken = jwtToken;
         this.converter = converter;
+        this.panelService = panelService;
     }
 
     @PostMapping("/register")
@@ -80,6 +84,6 @@ public class AdminController {
     @GetMapping("/overview")
     public ResponseEntity<String> getOverview(@RequestHeader String Authorization) {
         jwtToken.validateToken(Authorization);
-        return ResponseEntity.ok(userService.getOverview(jwtToken.getUsername(Authorization)));
+        return ResponseEntity.ok(panelService.getOverview(jwtToken.getUsername(Authorization)));
     }
 }

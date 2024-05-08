@@ -25,7 +25,7 @@ public class Converter {
     }
 
     public <T> T convertToDTO(Object object, Class<T> dto) {
-        log.info("Converting object to DTO : {}", object);
+        log.info("Converting object to DTO");
         return modelMapper.map(object, dto);
     }
 

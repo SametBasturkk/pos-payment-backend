@@ -62,7 +62,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private UserRole role = UserRole.USER;
+    private UserRole role = UserRole.ADMIN;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyID", referencedColumnName = "id", nullable = false)
