@@ -78,9 +78,9 @@ public class ProductController {
     }
 
     @PostMapping("/get-by-category")
-    public List<Product> getProductsByCategory(@RequestParam Category category) {
+    public List<ProductDTO> getProductsByCategory(@RequestBody Category category) {
         log.info("Product list request by category : {}", category);
-        return productService.getProductsByCategory(category);
+        return productService.getProductsByCategoryDTO(category);
     }
 
     @PostMapping("/image-upload")
@@ -93,6 +93,12 @@ public class ProductController {
     public Resource getImage(@PathVariable String filename) {
         log.info("Image request : {}", filename);
         return storageService.loadFile(filename);
+    }
+
+    @PostMapping("/update")
+    public void updateProduct(@RequestHeader String Authorization, @RequestBody Product product) {
+        product.setCompany(userService.getCompany(jwtToken.getUsername(Authorization)));
+        productService.updateProduct(product);
     }
 
 

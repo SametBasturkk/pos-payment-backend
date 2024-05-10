@@ -1,12 +1,15 @@
 package com.pospayment.pospayment.service;
 
+import com.pospayment.pospayment.dto.ProductDTO;
 import com.pospayment.pospayment.model.Category;
 import com.pospayment.pospayment.model.Company;
 import com.pospayment.pospayment.model.Product;
 import com.pospayment.pospayment.repository.ProductRepo;
+import com.pospayment.pospayment.util.Converter;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,8 +17,11 @@ public class ProductService {
 
     private ProductRepo productRepo;
 
-    public ProductService(ProductRepo productRepo) {
+    private Converter converter;
+
+    public ProductService(ProductRepo productRepo, Converter converter) {
         this.productRepo = productRepo;
+        this.converter = converter;
     }
 
     public void saveProduct(Product product) {
@@ -28,8 +34,7 @@ public class ProductService {
     }
 
     public void updateProduct(Product product) {
-        Product productFromDb = productRepo.findById(String.valueOf(product.getId())).get();
-
+        productRepo.save(product);
     }
 
     public Product getProduct(String id) {
@@ -42,6 +47,16 @@ public class ProductService {
 
     public List<Product> getProductsByCategory(Category category) {
         return productRepo.findByCategory(category);
+    }
+
+    public List<ProductDTO> getProductsByCategoryDTO(Category category) {
+        List<Product> products = productRepo.findByCategory(category);
+        List<ProductDTO> productDTO = new ArrayList<>();
+        for (Product product : products) {
+            productDTO.add(converter.convertToDTO(product, ProductDTO.class));
+        }
+
+        return productDTO;
     }
 
 }

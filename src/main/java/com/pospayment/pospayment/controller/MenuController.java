@@ -60,12 +60,11 @@ public class MenuController {
     @GetMapping("/get-all")
     public ResponseEntity<List<MenuDTO>> getAllMenus(@RequestHeader String Authorization) {
         Company company = userService.getCompany(jwtToken.getUsername(Authorization));
-
         log.info("Menu list request");
-
         return ResponseEntity.ok(menuService.getAllMenus(company));
 
     }
+
 
 
 }
